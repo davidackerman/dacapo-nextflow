@@ -1,0 +1,14 @@
+username = ""  # username for running on cluster
+api_token = ""  # api token for submitting to nextflow tower
+hostname = ""  # nextflow host name, eg. nextflow.int.janelia.org
+work_dir = ""  # nextflow workdir
+launch_dir = ""  # nextflow launchdir
+head_queue = ""  # queue for head job
+compute_queue = ""  # queue for compute job
+head_job_options = ""  # options for head job submission, eg. "-P chargegroup"
+pipeline_repo = ""  # github repo for containing nf script to be run
+revision = ""  # github branch to use
+workflow_workdir = ""  # working directory for workflow
+main_script = ""  # nf script name to run within repo, eg. "main.nf"
+config_profiles = [""]  # what profile to use -- if any, can be in a config file
+params_text = {}  # dict containing parameters that will be used by eg. the nf file
