@@ -1,7 +1,6 @@
 import requests
 import json
-from config import *
-
+from config.settings import *
 
 nextflow_api = f"http://{hostname}/api"
 headers = {
