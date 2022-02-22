@@ -21,7 +21,6 @@ def get_login_node_credentials():
 
 
 def get_or_setup_compute_environment(credential_id):
-    # get or setup compute environment
     res = requests.get(url=f"{nextflow_api}/compute-envs", headers=headers)
     compute_env_id = None
     for compute_env in res.json()["computeEnvs"]:
@@ -69,11 +68,13 @@ def launch_workflow(compute_env_id):
             "pullLatest": True,
         }
     }
+
     res = requests.post(
         url=f"{nextflow_api}/workflow/launch",
         data=json.dumps(workflow),
         headers=headers,
     )
+
     workflow_id = res.json()["workflowId"]
     res = requests.get(
         url=f"{nextflow_api}/workflow/{workflow_id}",
