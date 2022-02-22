@@ -1,10 +1,10 @@
 import requests
 import json
-from config.settings import *
+import config
 
-nextflow_api = f"http://{hostname}/api"
+nextflow_api = f"http://{config.hostname}/api"
 headers = {
-    "Authorization": f"Bearer {api_token}",
+    "Authorization": f"Bearer {config.api_token}",
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
@@ -32,13 +32,13 @@ def get_or_setup_compute_environment(credential_id):
                 "name": "dacapo_env",
                 "platform": "lsf-platform",
                 "config": {
-                    "userName": username,
-                    "workDir": work_dir,
-                    "launchDir": launch_dir,
-                    "hostName": hostname,
-                    "headQueue": head_queue,
-                    "computeQueue": compute_queue,
-                    "headJobOptions": head_job_options,
+                    "userName": config.username,
+                    "workDir": config.work_dir,
+                    "launchDir": config.launch_dir,
+                    "hostName": config.hostname,
+                    "headQueue": config.head_queue,
+                    "computeQueue": config.compute_queue,
+                    "headJobOptions": config.head_job_options,
                 },
                 "credentialsId": credential_id,
             }
@@ -58,12 +58,12 @@ def launch_workflow(compute_env_id):
     workflow = {
         "launch": {
             "computeEnvId": compute_env_id,
-            "pipeline": pipeline_repo,
-            "workDir": workflow_workdir,
-            "revision": revision,
-            "configProfiles": config_profiles,
-            "paramsText": json.dumps(params_text),
-            "mainScript": main_script,
+            "pipeline": config.pipeline_repo,
+            "workDir": config.workflow_workdir,
+            "revision": config.revision,
+            "configProfiles": config.config_profiles,
+            "paramsText": json.dumps(config.params_text),
+            "mainScript": config.main_script,
             "pullLatest": True,
         }
     }
@@ -82,7 +82,7 @@ def launch_workflow(compute_env_id):
     )
 
     print(
-        f'Monitor run at http://{hostname}/user/{res.json()["workflow"]["userName"]}/watch/{workflow_id}.'
+        f'Monitor run at http://{config.hostname}/user/{res.json()["workflow"]["userName"]}/watch/{workflow_id}.'
     )
 
 
