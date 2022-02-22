@@ -1,10 +1,10 @@
 import requests
 import json
-from .config import *
+import config
 
-nextflow_api = f"http://{hostname}/api"
+nextflow_api = f"http://{config.hostname}/api"
 headers = {
-    "Authorization": f"Bearer {api_token}",
+    "Authorization": f"Bearer {config.api_token}",
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
@@ -28,24 +28,26 @@ if not compute_env_id:
             "name": "dacapo_env",
             "platform": "lsf-platform",
             "config": {
-                "userName": username,
-                "hostName": hostname,
-                "headQueue": head_queue,
-                "computeQueue": compute_queue,
-                "headJobOptions": head_job_options,
+                "userName": config.username,
+                "workDir": config.work_dir,
+                "launchDir": config.launch_dir,
+                "hostName": config.hostname,
+                "headQueue": config.head_queue,
+                "computeQueue": config.compute_queue,
+                "headJobOptions": config.head_job_options,
             },
             "credentialsId": credential_id,
         }
     }
-
     res = requests.post(
         url=f"{nextflow_api}/compute-envs",
         data=json.dumps(compute_env),
         headers=headers,
     )
-    computeEnvId = res.json()["computeEnvId"]
+    print(res.json())
+    compute_env_id = res.json()["computeEnvId"]
 res = requests.get(url=f"{nextflow_api}/compute-envs", headers=headers)
-print(computeEnvId)
+print(compute_env_id)
 
 # setup workflow
 # TODO: unable to recognize profile if submit it via workflow and pipeline is defined in nextflow.config
@@ -54,12 +56,12 @@ print(computeEnvId)
 workflow = {
     "launch": {
         "computeEnvId": compute_env_id,
-        "pipeline": pipeline_repo,
-        "workDir": workflow_workdir,
-        "revision": revision,
-        "configProfiles": config_profiles,
-        "paramsText": json.dumps(params_text),
-        "mainScript": "dacapo.nf",
+        "pipeline": config.pipeline_repo,
+        "workDir": config.workflow_workdir,
+        "revision": config.revision,
+        "configProfiles": config.config_profiles,
+        "paramsText": json.dumps(config.params_text),
+        "mainScript": config.main_script,
         "pullLatest": True,
     }
 }
