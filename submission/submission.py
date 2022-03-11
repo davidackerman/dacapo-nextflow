@@ -2,7 +2,7 @@ import requests
 import json
 import config
 
-nextflow_api = f"http://{config.hostname}/api"
+nextflow_api = f"https://{config.hostname}/api"
 headers = {
     "Authorization": f"Bearer {config.api_token}",
     "Accept": "application/json",
