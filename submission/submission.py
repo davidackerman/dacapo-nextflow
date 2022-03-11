@@ -82,7 +82,7 @@ def launch_workflow(compute_env_id):
     )
 
     print(
-        f'Monitor run at http://{config.hostname}/user/{res.json()["workflow"]["userName"]}/watch/{workflow_id}.'
+        f'Monitor run at https://{config.hostname}/user/{res.json()["workflow"]["userName"]}/watch/{workflow_id}.'
     )
 
 
