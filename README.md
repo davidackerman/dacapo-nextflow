@@ -30,5 +30,3 @@ Before running dacapo via Tower, you need to setup a couple of one-time settings
 1. Clone or download this repository.
 2. Update `submission/config.py` to reflect your settings.
 3. Run `python submission/submission.py`. This will use your API token to get your login node credentials via Tower. It will then use your token and credential to get (or setup) a compute environment for your job. It will then launch your workflow and provide a link to monitor it.
-
-
