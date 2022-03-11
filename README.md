@@ -2,6 +2,7 @@
 This repository is to be used for running [dacapo](https://github.com/funkelab/dacapo) via [Nextflow Tower](https://cloud.tower.nf/)
 
 # Template config file
+To run Tower using this repo you need a configuration file, to be placed in `submission/config.py`. A template config file is provided in `submission/template_config.py`. Below find a specific example `submission/config.py`:
 ```python
 username = "{myUserName}"
 api_token = "{myApiToken}"
@@ -23,11 +24,11 @@ params_text = {
 }
 ```
 # First time setup
-Before running dacapo via Tower, you need to setup a couple of one-time settings. Run `ssh-keygen -t rsa -b 4096` on a node that can submit to the Janelia Cluster (eg. login1). Log into https://nextflow.int.janelia.org/ using your Janelia credentials. Go to the "Credentials" tab and press "New credentials" and select "SSH" as the provider. Copy the contents of ~/.ssh/id_rsa (containing the private key) to the SSH private key field. Name it "login1_credential" and click create. Next go to the dropdown by your icon in the top right and select "Your Tokens." Click "New token" name and copy the resulting token. Paste this Tower API token into the corresponding part in the `config.py` file.
+Before running dacapo via Tower, you need to setup a couple of one-time settings. Run `ssh-keygen -t rsa -b 4096` on a node that can submit to the Janelia Cluster (eg. login1). Log into https://nextflow.int.janelia.org/ using your Janelia credentials. Go to the "Credentials" tab and press "New credentials" and select "SSH" as the provider. Copy the contents of ~/.ssh/id_rsa (containing the private key) to the SSH private key field. Name it "login_credential" and click create. Next go to the dropdown by your icon in the top right and select "Your Tokens." Click "New token" name and copy the resulting token. Paste this Tower API token into the corresponding part in the `config.py` file.
 
 ## Running via command line
 1. Clone or download this repository.
-2. Update `config.py` to reflect your settings.
-3. Run `python submission.py`. This will use your API token to get your login node credentials via Tower. It will then use your token and credential to get (or setup) a compute environment for your job. It will then launch your workflow and provide a link to monitor it.
+2. Update `submission/config.py` to reflect your settings.
+3. Run `python submission/submission.py`. This will use your API token to get your login node credentials via Tower. It will then use your token and credential to get (or setup) a compute environment for your job. It will then launch your workflow and provide a link to monitor it.
 
 
