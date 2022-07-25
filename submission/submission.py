@@ -1,6 +1,8 @@
+import base64
 import requests
 import json
 import config
+from getpass import getpass
 
 nextflow_api = f"https://{config.hostname}/api"
 headers = {
@@ -8,6 +10,40 @@ headers = {
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
+
+
+def login(username, password):
+    res = requests.post(
+        f"{nextflow_api}/login",
+        json={"username": username, "password": password},
+        allow_redirects=False,
+    )
+    cookies = res.cookies.get_dict()
+    print(res, cookies)
+
+
+def get_auth_service_token(username, password):
+    headers = {"Content-type": "application/json", "Accept": "application/json"}
+    auth_response = requests.post(
+        config.auth_service_url,
+        headers=headers,
+        data=json.dumps({"username": username, "password": password}),
+    )
+    auth = auth_response.json()
+
+    return auth["token"]
+
+
+def post_tokens(token):
+
+    res = requests.post(
+        url=f"{nextflow_api}/tokens",
+        data=json.dumps({"name": "blah"}),
+        headers=headers,
+        # cookies={"OAUTH2_STATE": token},
+    )
+    print(res)
+    return res
 
 
 def get_login_node_credentials():
