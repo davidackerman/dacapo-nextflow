@@ -1,5 +1,5 @@
 .vscode/
-submission/config.py
+submission_demo/config.py
 submission/config/settings.py
 **/__pycache__/*
 
