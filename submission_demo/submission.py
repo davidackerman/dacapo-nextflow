@@ -9,10 +9,11 @@ headers = {
     "Content-Type": "application/json",
 }
 
+
 def get_login_node_credentials():
     res = requests.get(url=f"{nextflow_api}/credentials", headers=headers)
     for credential in res.json()["credentials"]:
-        if credential["name"] == "login_node":
+        if credential["name"] == f"dacapo":
             credential_id = credential["id"]
 
     return credential_id
@@ -20,15 +21,16 @@ def get_login_node_credentials():
 
 def get_or_setup_compute_environment(credential_id):
     res = requests.get(url=f"{nextflow_api}/compute-envs", headers=headers)
+    compute_env_name = f"dacapo_{config.chargegroup}_{config.compute_queue}"
     compute_env_id = None
     for compute_env in res.json()["computeEnvs"]:
-        if compute_env["name"] == "dacapo_env":
+        if compute_env["name"] == compute_env_name:
             compute_env_id = compute_env["id"]
 
     if not compute_env_id:
         compute_env = {
             "computeEnv": {
-                "name": "dacapo_env",
+                "name": compute_env_name,
                 "platform": "lsf-platform",
                 "config": {
                     "userName": config.username,
@@ -37,7 +39,7 @@ def get_or_setup_compute_environment(credential_id):
                     "hostName": config.hostname,
                     "headQueue": config.head_queue,
                     "computeQueue": config.compute_queue,
-                    "headJobOptions": config.head_job_options,
+                    "headJobOptions": f"-P {config.chargegroup}",
                 },
                 "credentialsId": credential_id,
             }
