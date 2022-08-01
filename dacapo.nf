@@ -2,11 +2,11 @@
 nextflow.enable.dsl=2
 
 process dacapo {
+    container: "ackermand/dacapo"
     cpus params.cpus
-    conda '/groups/scicompsoft/home/ackermand/miniconda3/envs/dacapo'
     script:
       """
-      dacapo train -r ${params.run_name}
+      /dacapo.sh train -r ${params.run_name}
       """
 }
 

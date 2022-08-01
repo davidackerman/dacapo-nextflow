@@ -16,7 +16,7 @@ class Nextflow:
 
     # workflow settings
     _pipeline_repo = f"https://github.com/davidackerman/dacapo-nextflow"
-    _revision = "main"
+    _revision = "docker"
     _config_profiles = ["lsf"]
     _main_script = "dacapo.nf"
 
