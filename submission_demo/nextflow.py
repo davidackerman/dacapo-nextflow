@@ -41,7 +41,7 @@ class Nextflow:
         self._get_request("tokens", "validating API token")
 
         # set ssh key
-        self._set_credentials(ssh_key)
+        self._set_nextflow_credentials(ssh_key)
 
     def set_compute_parameters(
         self, chargegroup: str, compute_queue: str
@@ -61,12 +61,12 @@ class Nextflow:
         self._compute_queue = compute_queue
 
         # setting of nextflow compute environment
-        self._get_compute_environment()
+        self._compute_env_id = self._get_nextflow_compute_environment()
         if not self._compute_env_id:
-            self._set_compute_environment()
+            self._compute_env_id = self._set_nextflow_compute_environment()
             return "Succeeded setting up compute parameters"
 
-    def launch_workflow(self, params_text: dict):
+    def launch_nextflow_workflow(self, params_text: dict):
         """Launches workflow for job specified in params_text"""
 
         params_text["lsf_opts"] = f'-P {self._chargegroup} -gpu "num=1"'
@@ -127,7 +127,7 @@ class Nextflow:
                 message += f' Error message: {response_json["message"]}.'
         return message
 
-    def _get_credentials(self) -> Union[None, str]:
+    def _get_nextflow_credentials(self) -> Union[None, str]:
         """Get "dacapo" credential from Nextflow
 
         Returns:
@@ -140,7 +140,7 @@ class Nextflow:
                 credential_id = credential["id"]
         return credential_id
 
-    def _set_credentials(self, ssh_key: str):
+    def _set_nextflow_credentials(self, ssh_key: str):
         """Set Nextflow ssh key credential"""
         credentials = {
             "credentials": {
@@ -154,17 +154,18 @@ class Nextflow:
         }
         self._post_request("credentials", credentials, "setting up SSH key")
 
-    def _get_compute_environment(self) -> Union[None, str]:
+    def _get_nextflow_compute_environment(self) -> Union[None, str]:
         """Get Nextflow compute environment specified by charge group and compute queue"""
         message = f"getting up compute environment for chargegroup {self._chargegroup} and compute_queue {self._compute_queue}"
-        self._compute_env_id = None
+        compute_env_id = None
         compute_env_name = f"dacapo_{self._chargegroup}_{self._compute_queue}"
         response = self._get_request("compute-envs", message)
         for compute_env in response.json()["computeEnvs"]:
             if compute_env["name"] == compute_env_name:
-                self._compute_env_id = compute_env["id"]
+                compute_env_id = compute_env["id"]
+        return compute_env_id
 
-    def _set_compute_environment(self):
+    def _set_nextflow_compute_environment(self) -> str:
         """Set compute environment for jobs"""
         workdir = expanduser(f"~{self._username}/") + ".dacapo/nextflow"
         compute_env = {
@@ -180,10 +181,10 @@ class Nextflow:
                     "computeQueue": self._compute_queue,
                     "headJobOptions": f"-P {self._chargegroup}",
                 },
-                "credentialsId": self._get_credentials(),
+                "credentialsId": self._get_nextflow_credentials(),
             }
         }
 
         message = f"setting up compute environment for chargegroup {self._chargegroup} and compute_queue {self._compute_queue}"
         response = self._post_request("compute-envs", compute_env, message)
-        self._compute_env_id = response.json()["computeEnvId"]
+        return response.json()["computeEnvId"]
