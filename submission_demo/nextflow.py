@@ -67,13 +67,7 @@ class Nextflow:
             return "Succeeded setting up compute parameters"
 
     def launch_workflow(self, params_text: dict):
-        """Launches workflow for job specified in params_text
-
-        Args:
-            params_text (dict): Dictionary containing specifics about the job
-            chargegroup (str): The group to be charged for the run
-            compute_queue (str): The queue the job is submitted to
-        """
+        """Launches workflow for job specified in params_text"""
 
         params_text["lsf_opts"] = f'-P {self._chargegroup} -gpu "num=1"'
         workdir = expanduser(f"~{self._username}/") + ".dacapo/nextflow"
@@ -146,15 +140,8 @@ class Nextflow:
                 credential_id = credential["id"]
         return credential_id
 
-    def _set_credentials(self, ssh_key: str) -> Union[None, str]:
-        """Set Nextflow ssh key credential
-
-        Args:
-            ssh_key (str): Private ssh key used to log in to cluster
-
-        Returns:
-            Union[None, str]: Error message, if any, encountered during verification
-        """
+    def _set_credentials(self, ssh_key: str):
+        """Set Nextflow ssh key credential"""
         credentials = {
             "credentials": {
                 "name": "dacapo",
@@ -168,15 +155,7 @@ class Nextflow:
         self._post_request("credentials", credentials, "setting up SSH key")
 
     def _get_compute_environment(self) -> Union[None, str]:
-        """Get Nextflow compute environment specified by a charge group and compute queue
-
-        Args:
-            chargegroup (str): The group to be charged for the run
-            compute_queue (str): The queue the job is submitted to
-
-        Returns:
-            Union[None, str]: The compute environment id, if it exists
-        """
+        """Get Nextflow compute environment specified by charge group and compute queue"""
         message = f"getting up compute environment for chargegroup {self._chargegroup} and compute_queue {self._compute_queue}"
         self._compute_env_id = None
         compute_env_name = f"dacapo_{self._chargegroup}_{self._compute_queue}"
@@ -186,6 +165,7 @@ class Nextflow:
                 self._compute_env_id = compute_env["id"]
 
     def _set_compute_environment(self):
+        """Set compute environment for jobs"""
         workdir = expanduser(f"~{self._username}/") + ".dacapo/nextflow"
         compute_env = {
             "computeEnv": {
