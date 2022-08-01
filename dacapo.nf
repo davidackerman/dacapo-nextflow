@@ -2,7 +2,7 @@
 nextflow.enable.dsl=2
 
 process dacapo {
-    container: "ackermand/dacapo"
+    container "ackermand/dacapo"
     cpus params.cpus
     script:
       """
