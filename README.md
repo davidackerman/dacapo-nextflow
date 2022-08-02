@@ -18,7 +18,7 @@ workflow_workdir = "output"
 config_profiles = ["lsf"]
 main_script = "dacapo.nf"
 params_text = {
-    "run_name": "distance_task_20211130_six_class_distances_datasplit_20211130_dummy_architecture_20211130_gunpowder_trainer_20211130:2",
+    "run_name": "signed_distances_mito_sum159-4_mito_mini_upsample_unet_test_gunpowder__0",
     "cpus": 5,
     "lsf_opts": f"{chargegroup}",
 }
