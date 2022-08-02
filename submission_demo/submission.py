@@ -15,7 +15,7 @@ if __name__ == "__main__":
         if setup_status:
             logging.info(setup_status)
 
-        submission_status = nextflow.launch_nextflow_workflow(config.params_text)
+        submission_status = nextflow.launch_workflow(config.params_text)
         logging.info(submission_status)
     except Exception as e:
         logging.error(str(e))
